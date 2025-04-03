@@ -11,7 +11,7 @@ const NavBar: React.FC = () => {
 	const router = useRouter();
 
 	return (
-		<nav className="bg-primary-foreground text-primary p-4 shadow-md">
+		<nav className="bg-primary-foreground p-4 shadow-md">
 			<div className="container mx-auto flex justify-between items-center">
 				<span
 					onClick={() => router.push("/")}
