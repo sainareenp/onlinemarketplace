@@ -18,6 +18,7 @@ interface FirestoreUser {
 	name: string;
 	email: string;
 	age?: number;
+	birthday?: string;
 	address?: string;
 	isProfileComplete: boolean; // New field to check completion
 }

@@ -39,7 +39,7 @@ export default function Dashboard() {
 						<strong>Email:</strong> {user.email}
 					</p>
 					<p className="text-muted-foreground">
-						<strong>Age:</strong> {user.age}
+						<strong>Birthday:</strong> {user.birthday}
 					</p>
 					<p className="text-muted-foreground">
 						<strong>Address:</strong> {user.address}

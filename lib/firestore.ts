@@ -4,18 +4,19 @@ import { setDoc, doc } from "firebase/firestore";
 import { AuthUser } from "./auth";
 
 // Store user data in Firestore
-export const saveUserToFirestore = async (user: AuthUser, name: string, address: string, age: number): Promise<void> => {
+export const saveUserToFirestore = async (user: AuthUser, name: string, address: string, birthday: string): Promise<void> => {
 	try {
 		await setDoc(doc(db, "users", user.uid), {
 			uid: user.uid,
 			name: name,
 			email: user.email,
 			address: address,
-			age: Number(age),
+			birthday: birthday,
 			isProfileComplete: true,
 			createdAt: new Date(),
 		});
 		console.log("User successfully added to Firestore.");
+		console.log(birthday, typeof birthday);
 	} catch (error) {
 		console.error("Error writing user to Firestore:", error);
 	}

@@ -22,7 +22,7 @@ export const signUp = async (
 	password: string,
 	name: string,
 	address: string,
-	age: number
+	birthday: string
 ): Promise<AuthUser> => {
 	try {
 		const userCredential = await createUserWithEmailAndPassword(
@@ -34,7 +34,7 @@ export const signUp = async (
 		const userData: AuthUser = { uid: user.uid, email: user.email };
 
 		await updateProfile(user, { displayName: email });
-		await saveUserToFirestore(userData, name, address, age); // Save user to Firestore
+		await saveUserToFirestore(userData, name, address, birthday); // Save user to Firestore
 		return userData;
 	} catch (error) {
 		if (error instanceof Error) {

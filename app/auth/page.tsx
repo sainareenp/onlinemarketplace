@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert } from "@/components/ui/alert";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 
 export default function Register() {
 	const [email, setEmail] = useState<string>("");
@@ -15,9 +16,11 @@ export default function Register() {
 	const [error, setError] = useState<string | null>(null);
 	const [name, setName] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
-	const [age, setAge] = useState<number>(0);
+	// const [age, setAge] = useState<number>(0);
 	const router = useRouter();
 	const { refreshUser, loginWithProvider } = useAuth();
+	const [birthday, setBirthday] = useState("");
+
 
 	const handleRegister = async () => {
 		setError(null);
@@ -27,7 +30,7 @@ export default function Register() {
 		}
 
 		try {
-			await signUp(email, password, name, address, age);
+			await signUp(email, password, name, address, birthday);
 			router.replace("/dashboard"); // Redirect after registration
 			alert("Registration successful! You can now log in.");
 		} catch (err: unknown) {
@@ -124,13 +127,16 @@ export default function Register() {
 							onChange={(e) => setAddress(e.target.value)}
 							className="bg-input text-input-foreground"
 						/>
+						<Label htmlFor="age" className="text-primary">
+							Birthday:
+						</Label>
 						<Input
-							type="number"
-							placeholder="Age"
-							value={age}
-							onChange={(e) => setAge(Number(e.target.value))}
+							type="date"
+							placeholder="Birthday"
+							onChange={(e) => setBirthday(e.target.value)}
 							className="bg-input text-input-foreground"
 						/>
+
 						<Button onClick={handleRegister} className="w-full bg-primary text-primary-foreground">
 							Sign Up
 						</Button>
