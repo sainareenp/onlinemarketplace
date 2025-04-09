@@ -39,17 +39,18 @@ const NavBar: React.FC = () => {
 					) : (
 						<div className="flex space-x-4">
 							<Button
-								variant="default"
+							className='bg-secondary-foreground'
+								// variant="secondary"
 								onClick={() => router.push("/auth")}
 							>
-								Login
+								Login/Register
 							</Button>
-							<Button
+							{/* <Button
 								variant="secondary"
 								onClick={() => router.push("/auth")}
 							>
 								Register
-							</Button>
+							</Button> */}
 							<ModeToggle />
 						</div>
 					)}
