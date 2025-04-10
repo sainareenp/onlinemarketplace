@@ -3,6 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button"; // Adjust the path as needed
+import DisplayListings from "./displayListings";
 
 export default function Dashboard() {
 	const { user, logout, loading } = useAuth();
@@ -50,12 +51,24 @@ export default function Dashboard() {
 					</p>
 				</div>
 				<Button
+					onClick={() => router.push("/create-listing")}
+					className="w-full mb-2"
+				>
+					Create Listing
+				</Button>
+				<Button
 					onClick={logout}
 					variant="destructive"
 					className="w-full"
 				>
 					Logout
 				</Button>
+			</div>
+			<div className="mt-8 w-full max-w-3xl">
+				<h2 className="text-xl font-bold text-card-foreground mb-4">
+					My Listings
+				</h2>
+				<DisplayListings />
 			</div>
 		</div>
 	);
