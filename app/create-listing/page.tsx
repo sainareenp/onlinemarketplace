@@ -18,6 +18,8 @@ const CreateListingPage = () => {
 		title: "",
 		description: "",
 		price: "",
+		city: "",
+		state: "",
 		photos: [] as File[],
 	});
 
@@ -53,19 +55,15 @@ const CreateListingPage = () => {
 		const listingId = v4();
 
 		const createListing = async () => {
-			const listingRef = doc(
-				db,
-				"listings",
-				"users",
-				user.uid,
-				listingId
-			);
+			const listingRef = doc(db, "listings", listingId);
 			await setDoc(listingRef, {
 				title: formData.title,
 				description: formData.description,
 				price: parseFloat(formData.price),
 				userId: user.uid,
 				createdAt: new Date(),
+				city: formData.city,
+				state: formData.state,
 			});
 			await setDoc(doc(db, "users", user.uid, "listings", listingId), {
 				listingId: listingId,
@@ -90,12 +88,9 @@ const CreateListingPage = () => {
 			.then(() => {
 				uploadPhotos()
 					.then(async (urls) => {
-						await updateDoc(
-							doc(db, "listings", "users", user.uid, listingId),
-							{
-								photos: urls,
-							}
-						);
+						await updateDoc(doc(db, "listings", listingId), {
+							photos: urls,
+						});
 						console.log("Listing updated with photo URLs:", urls);
 					})
 					.then(() => {
@@ -169,6 +164,32 @@ const CreateListingPage = () => {
 								onChange={handleChange}
 								className="mt-1"
 							/>
+						</div>
+						<div>
+							<Label
+								htmlFor="address"
+								className="text-sm font-medium"
+							>
+								Address
+							</Label>
+							<div className="flex flex-row space-x-2">
+								<Input
+									id="city"
+									name="city"
+									placeholder="City"
+									value={formData.city}
+									onChange={handleChange}
+									className="mt-1"
+								/>
+								<Input
+									id="state"
+									name="state"
+									placeholder="State"
+									value={formData.state}
+									onChange={handleChange}
+									className="mt-1"
+								/>
+							</div>
 						</div>
 						<div>
 							<Label

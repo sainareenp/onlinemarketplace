@@ -1,6 +1,6 @@
 import React from "react";
 import ListingCard from "@/components/ui/listingCard";
-import { getUserFavoritesIds, getUserListings } from "@/lib/listingFunctions";
+import { getUserFavorites, getUserFavoritesIds } from "@/lib/listingFunctions";
 import { useAuth } from "@/context/AuthContext"; // Adjust the path as needed
 import { Listing } from "@/lib/listingFunctions"; // Adjust the import path as needed
 
@@ -13,7 +13,7 @@ const DisplayListings: React.FC = () => {
 		const fetchListings = async () => {
 			try {
 				if (!user) return;
-				const userListings = await getUserListings(user?.uid);
+				const userListings = await getUserFavorites(user?.uid);
 				setListings(userListings);
 				const userFavorites = await getUserFavoritesIds(user?.uid);
 				setFavorites(userFavorites);
@@ -25,15 +25,17 @@ const DisplayListings: React.FC = () => {
 	}, [user]);
 	if (!user) return null; // Ensure user is logged in
 	return (
-		<div className="listings-container">
+		<div className="listings-container flex flex-wrap justify-center gap-4 p-4">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
-					<ListingCard
-						key={listing.id}
-						listing={listing}
-						userId={user.uid}
-						favorited={favorites.includes(listing.id)}
-					/>
+					<div key={listing.id} className="listing-item w-1/4 p-2">
+						<ListingCard
+							key={listing.id}
+							listing={listing}
+							favorited={favorites.includes(listing.id)}
+							userId={user.uid}
+						/>
+					</div>
 				))
 			) : (
 				<p>No listings available.</p>
