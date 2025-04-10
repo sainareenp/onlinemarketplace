@@ -3,7 +3,7 @@ import { collection, getDocs } from "@firebase/firestore";
 
 export interface Listing {
 	id: string;
-	name: string;
+	title: string;
 	description: string;
 	price: number;
 	photos: string[];
@@ -23,7 +23,7 @@ export async function getUserListings(userId: string): Promise<Listing[]> {
 		const data = doc.data();
 		return {
 			id: doc.id,
-			name: data.name || "",
+			title: data.title || "",
 			description: data.description || "",
 			price: data.price || 0,
 			photos: data.photos || [],

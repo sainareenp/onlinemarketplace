@@ -2,14 +2,7 @@ import React from "react";
 import ListingCard from "@/components/ui/listingCard";
 import { getUserListings } from "@/lib/listingFunctions";
 import { useAuth } from "@/context/AuthContext"; // Adjust the path as needed
-
-interface Listing {
-	id: string;
-	name: string;
-	description: string;
-	price: number;
-	photos: string[];
-}
+import { Listing } from "@/lib/listingFunctions"; // Adjust the import path as needed
 
 const DisplayListings: React.FC = () => {
 	const { user } = useAuth(); // Adjust the path as needed

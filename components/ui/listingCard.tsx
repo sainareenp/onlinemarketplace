@@ -12,11 +12,13 @@ import {
 
 const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
 	return (
-		<Card>
+		<Card className="py-0">
 			<div className="flex flex-col md:flex-row">
 				<div className="md:w-1/2 p-4">
 					<CardHeader>
-						<CardTitle className="text-lg">{listing.name}</CardTitle>
+						<CardTitle className="text-lg">
+							{listing.title}
+						</CardTitle>
 						<p className="text-sm text-muted-foreground">
 							{listing.description}
 						</p>
@@ -28,7 +30,7 @@ const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
 					</CardContent>
 				</div>
 				<div className="md:w-1/2 p-4">
-					<Carousel className="w-full max-w-xs mx-auto">
+					<Carousel className="w-[80%] max-w-xs mx-auto">
 						<CarouselContent>
 							{listing.photos.map((photo, index) => (
 								<CarouselItem key={index}>
@@ -42,7 +44,7 @@ const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
 													<img
 														src={photo}
 														alt={`${
-															listing.name
+															listing.title
 														} photo ${index + 1}`}
 														className="rounded-md object-cover w-full h-full"
 													/>
@@ -54,7 +56,11 @@ const ListingCard: React.FC<{ listing: Listing }> = ({ listing }) => {
 							))}
 						</CarouselContent>
 						{listing.photos.length > 1 && (
-						<><CarouselPrevious /><CarouselNext /></>)}
+							<>
+								<CarouselPrevious />
+								<CarouselNext />
+							</>
+						)}
 					</Carousel>
 				</div>
 			</div>
