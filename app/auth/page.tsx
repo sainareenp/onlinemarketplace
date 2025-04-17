@@ -166,8 +166,15 @@ export default function Register() {
 						<Button onClick={handleLogin} className="w-full bg-primary text-primary-foreground">
 							Log In
 						</Button>
+						<Button variant="secondary" onClick={() => handleProviderSignIn("Google")} className="w-full">
+							Login with Google
+						</Button>
+						<Button variant="secondary" onClick={() => handleProviderSignIn("GitHub")} className="w-full">
+							Login with GitHub
+						</Button>
 					</div>
 				)}
+				
 			</div>
 		</div>
 	);
