@@ -21,6 +21,8 @@ interface FirestoreUser {
 	birthday?: string;
 	address?: string;
 	isProfileComplete: boolean; // New field to check completion
+	listings?: string[];
+	favorites?: string[];
 }
 
 // Define AuthContext Type
@@ -59,7 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			const firebaseUser = await signInWithProvider(Provider);
 			// Check if user exists in Firestore
 			const firestoreUser = await fetchUserData(firebaseUser.uid);
-
 			if (!firestoreUser) {
 				// If user is new, create a Firestore entry with incomplete profile
 				await saveIncompleteUserToFirestore(firebaseUser);

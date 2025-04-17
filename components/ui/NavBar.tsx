@@ -1,13 +1,13 @@
 "use client";
 
-import React from 'react';
-import { useAuth } from '@/context/AuthContext'; // Adjust the path as needed
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button'; // Adjust the path as needed
-import { ModeToggle } from '@/components/ui/mode-toggle';
-
+import React from "react";
+import { useAuth } from "@/context/AuthContext"; // Adjust the path as needed
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button"; // Adjust the path as needed
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import NavBarDropDown from "@/components/ui/navBarDropDown";
 const NavBar: React.FC = () => {
-	const { user, logout } = useAuth();
+	const { user } = useAuth();
 	const router = useRouter();
 
 	return (
@@ -19,42 +19,24 @@ const NavBar: React.FC = () => {
 				>
 					SecureMarket
 				</span>
-				<div>
-					{user ? (
-						<div className="flex items-center space-x-4">
-							<span className="text-lg">
-								Welcome, {user.name}
-							</span>
-							<Button
-								variant="destructive"
-								onClick={() => {
-									logout();
-									router.push("/auth");
-								}}
-							>
-								Logout
-							</Button>
-							<ModeToggle />
-						</div>
-					) : (
-						<div className="flex space-x-4">
-							<Button
-							className='bg-secondary-foreground'
-								// variant="secondary"
-								onClick={() => router.push("/auth")}
-							>
-								Login/Register
-							</Button>
-							{/* <Button
-								variant="secondary"
-								onClick={() => router.push("/auth")}
-							>
-								Register
-							</Button> */}
-							<ModeToggle />
-						</div>
-					)}
-				</div>
+				{user ? (
+					<div className="flex items-center space-x-4">
+						<span className="text-lg">Welcome, {user.name}</span>
+						<ModeToggle />
+						<NavBarDropDown />
+					</div>
+				) : (
+					<div className="flex space-x-4">
+						<Button
+							className="bg-secondary-foreground"
+							onClick={() => router.push("/auth")}
+						>
+							Login/Register
+						</Button>
+						<ModeToggle />
+						<NavBarDropDown />
+					</div>
+				)}
 			</div>
 		</nav>
 	);
