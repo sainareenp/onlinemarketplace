@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+"use client"; // ✅ Required for useState, useEffect, and useRouter
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 import { AspectRatio } from "./aspect-ratio";
 import { Listing } from "@/lib/listingFunctions"; // Adjust the import path as needed
-import { useState } from "react";
-import { Button } from "@/components/ui/button"; // Adjust the path as needed
-import Modal from "@/components/ui/modal"; // Ensure you have a Modal component or create one
+import { Button } from "@/components/ui/button";
+import Modal from "@/components/ui/modal";
 import { StarIcon, StarFilledIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import {
 	Carousel,
@@ -20,6 +22,7 @@ const ListingCard: React.FC<{
 	userId: string;
 	favorited: boolean;
 }> = ({ listing, userId, favorited }) => {
+	const router = useRouter();
 	const [showModal, setShowModal] = useState(false);
 	const [isFavorited, setIsFavorited] = useState(favorited);
 
@@ -28,19 +31,20 @@ const ListingCard: React.FC<{
 		setIsFavorited(favorited);
 	}, [favorited]);
 
-	if (!userId) return null; // Ensure user is logged in
+	if (!userId) return null;
 
 	const handleFavoritedToggle = () => {
 		setIsFavorited((prev) => !prev);
 		updateFavorited(listing.id, userId);
 	};
 
+	const handleMessageSeller = () => {
+		router.push(`/chat?seller=${listing.userId}&item=${listing.id}`);
+	};
+
 	return (
 		<>
-			<Card
-				className="w-full cursor-pointer"
-				onClick={() => setShowModal(true)}
-			>
+			<Card className="w-full cursor-pointer" onClick={() => setShowModal(true)}>
 				<div className="flex flex-col">
 					<div className="px-9">
 						<Carousel className="w-full max-w-md mx-auto">
@@ -50,17 +54,10 @@ const ListingCard: React.FC<{
 										<div className="p-1">
 											<Card>
 												<CardContent className="flex aspect-auto items-center justify-center">
-													<AspectRatio
-														ratio={4 / 4}
-														key={index}
-													>
+													<AspectRatio ratio={4 / 4}>
 														<img
 															src={photo}
-															alt={`${
-																listing.title
-															} photo ${
-																index + 1
-															}`}
+															alt={`${listing.title} photo ${index + 1}`}
 															className="rounded-md object-cover w-full h-full"
 														/>
 													</AspectRatio>
@@ -80,9 +77,7 @@ const ListingCard: React.FC<{
 					</div>
 					<div className="p-4">
 						<CardHeader>
-							<CardTitle className="text-lg">
-								{listing.title}
-							</CardTitle>
+							<CardTitle className="text-lg">{listing.title}</CardTitle>
 							<p className="text-sm text-muted-foreground">
 								{listing.description.slice(0, 40)}
 								{listing.description.length > 40 && "..."}
@@ -113,17 +108,10 @@ const ListingCard: React.FC<{
 										<div className="p-1">
 											<Card>
 												<CardContent className="flex aspect-auto items-center justify-center">
-													<AspectRatio
-														ratio={4 / 4}
-														key={index}
-													>
+													<AspectRatio ratio={4 / 4}>
 														<img
 															src={photo}
-															alt={`${
-																listing.title
-															} photo ${
-																index + 1
-															}`}
+															alt={`${listing.title} photo ${index + 1}`}
 															className="rounded-md object-cover w-full h-full"
 														/>
 													</AspectRatio>
@@ -153,7 +141,6 @@ const ListingCard: React.FC<{
 					)}
 					<div className="flex gap-4 mt-4">
 						<Button
-							className=""
 							size={"icon"}
 							variant={"ghost"}
 							onClick={handleFavoritedToggle}
@@ -164,17 +151,10 @@ const ListingCard: React.FC<{
 								<StarIcon className="h-4 w-4" />
 							)}
 						</Button>
-						<Button
-							className=""
-							onClick={() => alert("Purchase initiated!")}
-						>
+						<Button onClick={() => alert("Purchase initiated!")}>
 							Buy Now
 						</Button>
-						<Button
-							className=""
-							variant={"secondary"}
-							onClick={() => alert("Messaging seller!")}
-						>
+						<Button variant={"secondary"} onClick={handleMessageSeller}>
 							<Pencil2Icon className="h-4 w-4" />
 							Message Seller
 						</Button>
