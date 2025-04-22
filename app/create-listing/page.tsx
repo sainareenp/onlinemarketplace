@@ -12,6 +12,11 @@ import { db } from "@/firebaseConfig"; // Adjust the path as needed
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { v4 } from "uuid";
 import { useRouter } from "next/navigation";
+import { createNotification } from "@/lib/createnotification";
+import { useEffect } from "react";
+
+
+
 
 const CreateListingPage = () => {
 	const [formData, setFormData] = useState({
@@ -26,6 +31,10 @@ const CreateListingPage = () => {
 	const router = useRouter();
 
 	const { user } = useAuth();
+	
+	
+	  
+
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -68,6 +77,10 @@ const CreateListingPage = () => {
 			await setDoc(doc(db, "users", user.uid, "listings", listingId), {
 				listingId: listingId,
 			});
+			console.log("Creating listing for user:", user.uid);
+
+			await createNotification(user.uid, `Your listing "${formData.title}" was created!`);
+
 		};
 
 		const uploadPhotos = async () => {
