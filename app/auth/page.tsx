@@ -9,6 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Alert } from "@/components/ui/alert";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import {
+	getAuth,
+	getMultiFactorResolver,
+	MultiFactorError,
+	MultiFactorResolver,
+} from "firebase/auth";
+import TotpSignIn from "@/components/auth/totp-signin";
 
 export default function Register() {
 	const [email, setEmail] = useState<string>("");
@@ -20,7 +27,8 @@ export default function Register() {
 	const router = useRouter();
 	const { refreshUser, loginWithProvider } = useAuth();
 	const [birthday, setBirthday] = useState("");
-
+	const [isTOTP, setIsTOTP] = useState<boolean>(false);
+	const [resolver, setResolver] = useState<MultiFactorResolver | null>(null);
 
 	const handleRegister = async () => {
 		setError(null);
@@ -50,6 +58,29 @@ export default function Register() {
 			router.replace("/dashboard"); // Redirect after Google sign-in
 		} catch (err: unknown) {
 			if (err instanceof Error) {
+				handleTOTPSignIn(err);
+			} else {
+				setError("An unexpected error occurred.");
+			}
+		}
+	};
+
+	const handleTOTPSignIn = async (error: unknown) => {
+		// 1. Verify it's the expected MFA error
+		try {
+			const auth = getAuth();
+			const mfaResolver = getMultiFactorResolver(
+				auth,
+				error as MultiFactorError
+			);
+
+			setIsTOTP(true);
+			setActiveTab("totp");
+			setResolver(mfaResolver);
+
+			return mfaResolver;
+		} catch (err) {
+			if (err instanceof Error) {
 				setError(err.message);
 			} else {
 				setError("An unexpected error occurred.");
@@ -57,7 +88,7 @@ export default function Register() {
 		}
 	};
 
-	const [activeTab, setActiveTab] = useState<"register" | "login">(
+	const [activeTab, setActiveTab] = useState<"register" | "login" | "totp">(
 		"register"
 	);
 
@@ -85,18 +116,45 @@ export default function Register() {
 		<div className="flex flex-col items-center justify-center min-h-screen bg-background">
 			<div className="w-full max-w-md p-8 bg-card rounded-lg shadow">
 				<div className="flex justify-center mb-6">
-					<Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as "register" | "login")}>
+					<Tabs
+						defaultValue={activeTab}
+						onValueChange={(value) =>
+							setActiveTab(value as "register" | "login")
+						}
+					>
 						<TabsList className="bg-muted text-muted-foreground">
-							<TabsTrigger value="register" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+							<TabsTrigger
+								value="register"
+								className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+							>
 								Register
 							</TabsTrigger>
-							<TabsTrigger value="login" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+							<TabsTrigger
+								value="login"
+								className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+							>
 								Login
 							</TabsTrigger>
+							{isTOTP && (
+								<TabsTrigger
+									value="totp"
+									className={`px-4 py-2 font-bold ${
+										activeTab === "totp"
+											? "text-blue-500 border-b-2 border-blue-500"
+											: "text-gray-500"
+									}`}
+								>
+									TOTP
+								</TabsTrigger>
+							)}
 						</TabsList>
 					</Tabs>
 				</div>
-				{error && <Alert variant="destructive" className="mb-4">{error}</Alert>}
+				{error && (
+					<Alert variant="destructive" className="mb-4">
+						{error}
+					</Alert>
+				)}
 				{activeTab === "register" ? (
 					<div className="space-y-4">
 						<Input
@@ -137,17 +195,28 @@ export default function Register() {
 							className="bg-input text-input-foreground"
 						/>
 
-						<Button onClick={handleRegister} className="w-full bg-primary text-primary-foreground">
+						<Button
+							onClick={handleRegister}
+							className="w-full bg-primary text-primary-foreground"
+						>
 							Sign Up
 						</Button>
-						<Button variant="secondary" onClick={() => handleProviderSignIn("Google")} className="w-full">
+						<Button
+							variant="secondary"
+							onClick={() => handleProviderSignIn("Google")}
+							className="w-full"
+						>
 							Sign Up with Google
 						</Button>
-						<Button variant="secondary" onClick={() => handleProviderSignIn("GitHub")} className="w-full">
+						<Button
+							variant="secondary"
+							onClick={() => handleProviderSignIn("GitHub")}
+							className="w-full"
+						>
 							Sign Up with GitHub
 						</Button>
 					</div>
-				) : (
+				) : activeTab === "login" ? (
 					<div className="space-y-4">
 						<Input
 							type="email"
@@ -163,18 +232,32 @@ export default function Register() {
 							onChange={(e) => setPassword(e.target.value)}
 							className="bg-input text-input-foreground"
 						/>
-						<Button onClick={handleLogin} className="w-full bg-primary text-primary-foreground">
+						<Button
+							onClick={handleLogin}
+							className="w-full bg-primary text-primary-foreground"
+						>
 							Log In
 						</Button>
-						<Button variant="secondary" onClick={() => handleProviderSignIn("Google")} className="w-full">
+						<Button
+							variant="secondary"
+							onClick={() => handleProviderSignIn("Google")}
+							className="w-full"
+						>
 							Login with Google
 						</Button>
-						<Button variant="secondary" onClick={() => handleProviderSignIn("GitHub")} className="w-full">
+						<Button
+							variant="secondary"
+							onClick={() => handleProviderSignIn("GitHub")}
+							className="w-full"
+						>
 							Login with GitHub
 						</Button>
 					</div>
+				) : (
+					<div className="space-y-4">
+						<TotpSignIn resolver={resolver!} />
+					</div>
 				)}
-				
 			</div>
 		</div>
 	);
