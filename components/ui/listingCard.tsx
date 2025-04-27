@@ -45,7 +45,7 @@ const ListingCard: React.FC<{
 			listing.userId,
 			listing.id
 		);
-		router.push(`/chat/${conversationId}`);
+		router.push(`/chat?conversationId=${conversationId}`);
 	};
 
 	return (
