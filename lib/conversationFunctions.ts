@@ -1,4 +1,12 @@
-import { collection, addDoc, serverTimestamp, FieldValue, getDocs, query, where } from "firebase/firestore";
+import {
+	collection,
+	addDoc,
+	serverTimestamp,
+	FieldValue,
+	getDocs,
+	query,
+	where,
+} from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 
 export interface Message {
@@ -22,6 +30,11 @@ export const getOrCreateConversation = async (
 ): Promise<string | null> => {
 	try {
 		const conversationsRef = collection(db, "conversations");
+
+		if (buyerId === sellerId) {
+			console.error("❌ Buyer and seller IDs are the same:", buyerId);
+			return null;
+		}
 
 		// Check if conversation already exists
 		const q = query(
@@ -58,6 +71,26 @@ export const getOrCreateConversation = async (
 		return newConversationRef.id;
 	} catch (error) {
 		console.error("❌ Error finding or creating conversation:", error);
+		return null;
+	}
+};
+
+export const getUserName = async (userId: string): Promise<string | null> => {
+	try {
+		const userRef = collection(db, "users");
+		const q = query(userRef, where("uid", "==", userId));
+		const querySnapshot = await getDocs(q);
+
+		if (querySnapshot.empty) {
+			console.log("❌ No user found with ID:", userId);
+			return null;
+		}
+
+		const userDoc = querySnapshot.docs[0].data();
+		console.log("✅ User found:", userDoc.name);
+		return userDoc.name || null;
+	} catch (error) {
+		console.error("❌ Error fetching user name:", error);
 		return null;
 	}
 };

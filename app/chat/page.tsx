@@ -5,7 +5,6 @@ import { MainSidebar } from "@/components/navigation/MainSidebar";
 import { ConversationList } from "@/components/chat/ConversationList";
 import { ChatWindow, Conversation } from "@/components/chat/ChatWindow";
 import { useAuth } from "@/context/AuthContext";
-import ListingPreview from "@/components/listing/listingPreview";
 
 export default function MessagingPage() {
 	const [activeConversation, setActiveConversation] =
@@ -34,17 +33,6 @@ export default function MessagingPage() {
 					<div className="flex flex-col gap-8 items-center justify-center max-w-5xl w-full">
 						{/* Inner container that centers horizontally */}
 						<div className="flex flex-col items-center justify-center w-full">
-							{/* Listing Preview */}
-							{activeConversation.listing && (
-								<div className="w-full max-w-2xl mx-auto p-6 pb-0">
-									<ListingPreview
-										listing={activeConversation.listing}
-										favorited={false}
-										userId={user.uid}
-									/>
-								</div>
-							)}
-
 							{/* Chat Window */}
 							<div className="w-full max-w-2xl mx-auto pt-0">
 								<div className="h-[40vh]">

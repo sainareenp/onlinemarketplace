@@ -32,21 +32,34 @@ const ListingPreview: React.FC<{
 
 	return (
 		<>
-			<Card className="w-full cursor-pointer py-0">
-				<div className="flex items-center gap-4 p-4">
-					<div className="w-16 h-16">
-						<AspectRatio ratio={1}>
-							<img
-								src={listing.photos[0]}
-								alt={`${listing.title} preview`}
-								className="rounded-md object-cover w-full h-full"
-							/>
-						</AspectRatio>
+			<Card
+				className="w-full cursor-pointer py-0"
+				onClick={() => setShowModal(true)}
+			>
+				<div className="flex items-center justify-between gap-4 p-4">
+					<div className="flex items-center gap-4">
+						<div className="w-10 h-10">
+							<AspectRatio ratio={1}>
+								<img
+									src={listing.photos[0]}
+									alt={`${listing.title} preview`}
+									className="rounded-md object-cover w-full h-full"
+								/>
+							</AspectRatio>
+						</div>
+						<div>
+							<CardTitle className="text-lg truncate">
+								{listing.title}
+							</CardTitle>
+						</div>
+						<div className="max-w-xs">
+							<p className="text-sm text-secondary-foreground/60 truncate">
+								{listing.description}
+							</p>
+						</div>
 					</div>
-					<div>
-						<CardTitle className="text-lg">
-							{listing.title}
-						</CardTitle>
+					<div className="text-right text-lg text-primary font-semibold">
+						${listing.price.toFixed(2)}
 					</div>
 				</div>
 			</Card>

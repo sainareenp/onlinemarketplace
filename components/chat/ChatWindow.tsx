@@ -16,6 +16,8 @@ import {
 } from "firebase/firestore";
 import { ScrollArea } from "../ui/scroll-area";
 import { Listing } from "@/lib/listingFunctions";
+import ListingPreview from "../listing/listingPreview";
+import { getUserName } from "@/lib/conversationFunctions";
 
 interface Message {
 	id: string;
@@ -42,6 +44,7 @@ export function ChatWindow({
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [participantNames, setParticipantNames] = useState<string>("");
 
 	useEffect(() => {
 		if (!activeConversation || !user) return;
@@ -50,6 +53,23 @@ export function ChatWindow({
 			collection(db, "conversations", activeConversation.id, "messages"),
 			orderBy("timestamp", "asc")
 		);
+
+		const participantNames = async () => {
+			const names = (
+				await Promise.all(
+					activeConversation.participants
+						.filter((id) => id !== user?.uid)
+						.map(async (id) => {
+							const participant = await getUserName(id);
+							console.log("Participant name:", participant);
+							return participant || id;
+						})
+				)
+			).join(", ");
+			setParticipantNames(names);
+		};
+
+		participantNames();
 
 		const unsubscribe = onSnapshot(q, (snapshot) => {
 			const msgs = snapshot.docs.map((doc) => ({
@@ -90,6 +110,14 @@ export function ChatWindow({
 		setNewMessage("");
 	};
 
+	if (!user) {
+		return (
+			<div className="flex-1 flex items-center justify-center text-gray-400">
+				Please log in to view messages
+			</div>
+		);
+	}
+
 	if (!activeConversation) {
 		return (
 			<div className="flex-1 flex items-center justify-center text-gray-400">
@@ -99,15 +127,20 @@ export function ChatWindow({
 	}
 
 	return (
-		<div className="flex justify-center items-center flex-1 pt-0  p-6 h-full">
+		<div className="flex-col justify-center items-center flex-1 pt-0  p-6 h-full">
+			{activeConversation.listing && (
+				<div className="w-full max-w-2xl mx-auto p-0 pb-4">
+					<ListingPreview
+						listing={activeConversation.listing}
+						favorited={false}
+						userId={user.uid}
+					/>
+				</div>
+			)}
 			<div className="w-full max-w-2xl bg-background border rounded-lg shadow-lg flex flex-col overflow-hidden h-full">
 				{/* Chat Header */}
-				<div className="p-4 border-b text-sm text-muted-foreground flex justify-between items-center">
-					<span>
-						{`Chat with ${activeConversation.participants
-							.filter((id) => id !== user?.uid)
-							.join(", ")}`}
-					</span>
+				<div className="border-b text-md text-muted-foreground flex justify-between items-center">
+					<span className="text-md text-primary pl-4">{`${participantNames}`}</span>
 				</div>
 
 				{/* Messages */}

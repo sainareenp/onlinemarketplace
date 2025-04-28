@@ -13,6 +13,7 @@ import {
 	Timestamp,
 } from "firebase/firestore";
 import { getListingById, Listing } from "@/lib/listingFunctions";
+import { format, isToday, isYesterday } from "date-fns";
 
 interface Conversation {
 	id: string;
@@ -87,30 +88,21 @@ export function ConversationList({
 					<div className="font-medium truncate text-foreground">
 						{convo.listing?.title || "Unnamed Listing"}
 					</div>
-					<div className="text-sm text-secondary truncate">
+					<div className="text-sm text-secondary-foreground/60 truncate">
 						{convo.lastMessage || "No messages yet"}
 					</div>
 					<div className="text-xs text-primary/80">
 						{(() => {
-							const updatedDate = convo.updatedAt.toDate();
-							const now = new Date();
-							const isToday =
-								updatedDate.toDateString() ===
-								now.toDateString();
-							const isYesterday =
-								new Date(
-									now.setDate(now.getDate() - 1)
-								).toDateString() === updatedDate.toDateString();
+							if (!convo.updatedAt) return "...";
 
-							if (isToday) {
-								return updatedDate.toLocaleTimeString([], {
-									hour: "numeric",
-									minute: "2-digit",
-								});
-							} else if (isYesterday) {
+							const updatedDate = convo.updatedAt.toDate();
+
+							if (isToday(updatedDate)) {
+								return format(updatedDate, "p");
+							} else if (isYesterday(updatedDate)) {
 								return "Yesterday";
 							} else {
-								return updatedDate.toLocaleDateString();
+								return format(updatedDate, "MM/dd/yyyy");
 							}
 						})()}
 					</div>
