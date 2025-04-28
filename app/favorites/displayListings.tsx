@@ -1,5 +1,5 @@
 import React from "react";
-import ListingCard from "@/components/ui/listingCard";
+import ListingCard from "@/components/listing/listingCard";
 import { getUserFavorites, getUserFavoritesIds } from "@/lib/listingFunctions";
 import { useAuth } from "@/context/AuthContext"; // Adjust the path as needed
 import { Listing } from "@/lib/listingFunctions"; // Adjust the import path as needed

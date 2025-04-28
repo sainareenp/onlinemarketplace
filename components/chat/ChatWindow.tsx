@@ -14,6 +14,8 @@ import {
 	updateDoc,
 	Timestamp,
 } from "firebase/firestore";
+import { ScrollArea } from "../ui/scroll-area";
+import { Listing } from "@/lib/listingFunctions";
 
 interface Message {
 	id: string;
@@ -28,6 +30,7 @@ export interface Conversation {
 	itemId: string;
 	lastMessage: string;
 	updatedAt: Timestamp;
+	listing: Listing | null;
 }
 
 export function ChatWindow({
@@ -96,10 +99,10 @@ export function ChatWindow({
 	}
 
 	return (
-		<div className="flex justify-center items-center flex-1 p-6">
-			<div className="w-full max-w-2xl bg-white border rounded-lg shadow-lg flex flex-col overflow-hidden h-[80vh]">
+		<div className="flex justify-center items-center flex-1 pt-0  p-6 h-full">
+			<div className="w-full max-w-2xl bg-background border rounded-lg shadow-lg flex flex-col overflow-hidden h-full">
 				{/* Chat Header */}
-				<div className="p-4 border-b text-sm text-gray-500 flex justify-between items-center">
+				<div className="p-4 border-b text-sm text-muted-foreground flex justify-between items-center">
 					<span>
 						{`Chat with ${activeConversation.participants
 							.filter((id) => id !== user?.uid)
@@ -108,21 +111,23 @@ export function ChatWindow({
 				</div>
 
 				{/* Messages */}
-				<div className="flex-1 overflow-y-auto p-4 space-y-4">
-					{messages.map((msg) => (
-						<div
-							key={msg.id}
-							className={`p-2 rounded-lg max-w-[70%] ${
-								msg.senderId === user?.uid
-									? "ml-auto bg-blue-600 text-white"
-									: "bg-gray-300 text-black"
-							}`}
-						>
-							{msg.message}
-						</div>
-					))}
-					<div ref={messagesEndRef} />
-				</div>
+				<ScrollArea className="flex-1 overflow-y-auto">
+					<div className="p-4 space-y-4">
+						{messages.map((msg) => (
+							<div
+								key={msg.id}
+								className={`p-2 rounded-lg max-w-[70%] w-fit ${
+									msg.senderId === user?.uid
+										? "ml-auto bg-primary text-secondary-foreground"
+										: "bg-secondary text-secondary-foreground"
+								}`}
+							>
+								{msg.message}
+							</div>
+						))}
+						<div ref={messagesEndRef} />
+					</div>
+				</ScrollArea>
 
 				{/* Message Input */}
 				<div className="p-4 border-t flex gap-2">
@@ -132,12 +137,12 @@ export function ChatWindow({
 						onKeyDown={(e) =>
 							e.key === "Enter" && handleSendMessage()
 						}
-						className="flex-1 border p-2 rounded"
+						className="flex-1 border p-2 rounded bg-input text-input-foreground placeholder:text-muted-foreground"
 						placeholder="Type your message..."
 					/>
 					<button
 						onClick={handleSendMessage}
-						className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+						className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90"
 					>
 						Send
 					</button>

@@ -12,6 +12,7 @@ import {
 	onSnapshot,
 	Timestamp,
 } from "firebase/firestore";
+import { getListingById, Listing } from "@/lib/listingFunctions";
 
 interface Conversation {
 	id: string;
@@ -19,6 +20,7 @@ interface Conversation {
 	itemId: string;
 	lastMessage: string;
 	updatedAt: Timestamp;
+	listing: Listing | null;
 }
 
 export function ConversationList({
@@ -51,11 +53,20 @@ export function ConversationList({
 			orderBy("updatedAt", "desc")
 		);
 
-		const unsubscribe = onSnapshot(q, (snapshot) => {
-			const convos = snapshot.docs.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			})) as Conversation[];
+		const unsubscribe = onSnapshot(q, async (snapshot) => {
+			const convos = await Promise.all(
+				snapshot.docs.map(async (doc) => {
+					const data = doc.data();
+					const listing = data.itemId
+						? await getListingById(data.itemId)
+						: null;
+					return {
+						id: doc.id,
+						...data,
+						listing,
+					};
+				})
+			) as Conversation[];
 			setConversations(convos);
 		});
 
@@ -70,11 +81,36 @@ export function ConversationList({
 			{conversations.map((convo) => (
 				<div
 					key={convo.id}
-					className="p-4 hover:bg-gray-100 cursor-pointer"
+					className="p-4 hover:bg-muted cursor-pointer"
 					onClick={() => onSelect(convo)}
 				>
-					<div className="font-medium truncate">
-						{convo.lastMessage || "New conversation"}
+					<div className="font-medium truncate text-foreground">
+						{convo.listing?.title || "Unnamed Listing"}
+					</div>
+					<div className="text-sm text-secondary truncate">
+						{convo.lastMessage || "No messages yet"}
+					</div>
+					<div className="text-xs text-primary/80">
+						{(() => {
+							const updatedDate = convo.updatedAt.toDate();
+							const now = new Date();
+							const isToday =
+								updatedDate.toDateString() === now.toDateString();
+							const isYesterday =
+								new Date(now.setDate(now.getDate() - 1)).toDateString() ===
+								updatedDate.toDateString();
+
+							if (isToday) {
+								return updatedDate.toLocaleTimeString([], {
+									hour: "numeric",
+									minute: "2-digit",
+								});
+							} else if (isYesterday) {
+								return "Yesterday";
+							} else {
+								return updatedDate.toLocaleDateString();
+							}
+						})()}
 					</div>
 				</div>
 			))}

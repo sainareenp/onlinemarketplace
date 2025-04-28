@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, MessageCircle, Compass , MenuIcon, Star } from "lucide-react";
+import { Home, MessageCircle, Compass, MenuIcon, Star } from "lucide-react";
 import {
 	Sidebar,
 	SidebarHeader,
@@ -20,13 +20,10 @@ export function MainSidebar() {
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
-							<div
-								onClick={toggleSidebar}
-								className="flex items-center gap-2"
-							>
+							<a onClick={toggleSidebar} className="cursor-pointer">
 								<MenuIcon className="w-5 h-5" />
 								<span>Collapse</span>
-							</div>
+							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 					<SidebarMenuItem>

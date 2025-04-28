@@ -4,60 +4,63 @@ import { useState } from "react";
 import { MainSidebar } from "@/components/navigation/MainSidebar";
 import { ConversationList } from "@/components/chat/ConversationList";
 import { ChatWindow, Conversation } from "@/components/chat/ChatWindow";
-import ListingCard from "@/components/ui/listingCard";
-import { getListingById, Listing } from "@/lib/listingFunctions";
 import { useAuth } from "@/context/AuthContext";
+import ListingPreview from "@/components/listing/listingPreview";
 
 export default function MessagingPage() {
 	const [activeConversation, setActiveConversation] =
 		useState<Conversation | null>(null);
-	const [activeListing, setActiveListing] = useState<Listing | null>(null);
 	const { user } = useAuth();
 
 	const onSelect = async (conversation: Conversation) => {
-		const listing = await getListingById(conversation.itemId);
-		setActiveListing(listing);
 		setActiveConversation(conversation);
 	};
 
 	if (!user) return null;
 
 	return (
-		<div className="flex h-screen">
+		<>
 			{/* Main navigation */}
 			<MainSidebar />
 
 			{/* Conversation List */}
-			<div className="w-[300px] border-r overflow-y-auto">
+			<div className="border-r overflow-y-auto">
 				<ConversationList onSelect={onSelect} />
 			</div>
 
 			{/* Main content */}
 			<div className="flex-1 flex justify-center items-center overflow-auto p-6">
-				{activeConversation && activeListing ? (
-					<div className="flex gap-8 items-center justify-center max-w-7xl w-full">
-						{/* Chat window */}
-						<div className="flex-1 flex justify-center">
-							<ChatWindow
-								activeConversation={activeConversation}
-							/>
-						</div>
+				{activeConversation ? (
+					<div className="flex flex-col gap-8 items-center justify-center max-w-5xl w-full">
+						{/* Inner container that centers horizontally */}
+						<div className="flex flex-col items-center justify-center w-full">
+							{/* Listing Preview */}
+							{activeConversation.listing && (
+								<div className="w-full max-w-2xl mx-auto p-6 pb-0">
+									<ListingPreview
+										listing={activeConversation.listing}
+										favorited={false}
+										userId={user.uid}
+									/>
+								</div>
+							)}
 
-						{/* Listing card */}
-						<div className="flex-shrink-0 w-[350px]">
-							<ListingCard
-								listing={activeListing}
-								userId={user?.uid || ""}
-								favorited={false}
-							/>
+							{/* Chat Window */}
+							<div className="w-full max-w-2xl mx-auto pt-0">
+								<div className="h-[40vh]">
+									<ChatWindow
+										activeConversation={activeConversation}
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 				) : (
-					<div className="text-gray-400">
+					<div className="text-gray-400 text-center w-full">
 						Select a conversation to start chatting
 					</div>
 				)}
 			</div>
-		</div>
+		</>
 	);
 }
