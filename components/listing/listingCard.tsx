@@ -1,3 +1,4 @@
+
 "use client"; // ✅ Required for useState, useEffect, and useRouter
 
 import React, { useEffect, useState } from "react";
@@ -12,7 +13,8 @@ import {
 	CarouselPrevious,
 	CarouselNext,
 } from "../ui/carousel";
-import { updateFavorited } from "@/lib/listingFunctions";
+import { updateFavorited, updateCart } from "@/lib/listingFunctions";
+
 import { getOrCreateConversation } from "@/lib/conversationFunctions";
 import ListingPopup from "./listingPopup";
 
@@ -35,6 +37,11 @@ const ListingCard: React.FC<{
 	const handleFavoritedToggle = () => {
 		setIsFavorited((prev) => !prev);
 		updateFavorited(listing.id, userId);
+	};
+
+	const handleAddToCart = () => {
+		updateCart(listing.id, userId);
+		alert("Item added to cart!");
 	};
 
 	const handleMessageSeller = async () => {
@@ -118,6 +125,7 @@ const ListingCard: React.FC<{
 				isFavorited={isFavorited}
 				handleFavoritedToggle={handleFavoritedToggle}
 				handleMessageSeller={handleMessageSeller}
+				handleAddToCart={handleAddToCart}
 			/>
 		</>
 	);
