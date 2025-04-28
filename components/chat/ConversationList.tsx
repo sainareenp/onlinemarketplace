@@ -41,6 +41,10 @@ export function ConversationList({
 			);
 			if (currentConversation) {
 				onSelect(currentConversation);
+				const params = new URLSearchParams(window.location.search);
+				params.delete("conversationId");
+				const newUrl = `${window.location.pathname}?${params.toString()}`;
+				window.history.replaceState({}, "", newUrl);
 			}
 		}
 	}, [conversationId, conversations]);
