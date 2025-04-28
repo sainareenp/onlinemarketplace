@@ -1,7 +1,7 @@
 
 "use client";
 import React from "react";
-import ListingCard from "@/components/ui/listingCard";
+import ListingCard from "@/components/listing/listingCard";
 import { getUserCart } from "@/lib/listingFunctions";
 import { useAuth } from "@/context/AuthContext";
 import { Listing } from "@/lib/listingFunctions";

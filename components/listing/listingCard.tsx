@@ -1,4 +1,3 @@
-
 "use client"; // ✅ Required for useState, useEffect, and useRouter
 
 import React, { useEffect, useState } from "react";
@@ -41,7 +40,6 @@ const ListingCard: React.FC<{
 
 	const handleAddToCart = () => {
 		updateCart(listing.id, userId);
-		alert("Item added to cart!");
 	};
 
 	const handleMessageSeller = async () => {

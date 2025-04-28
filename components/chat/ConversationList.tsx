@@ -54,7 +54,7 @@ export function ConversationList({
 		);
 
 		const unsubscribe = onSnapshot(q, async (snapshot) => {
-			const convos = await Promise.all(
+			const convos = (await Promise.all(
 				snapshot.docs.map(async (doc) => {
 					const data = doc.data();
 					const listing = data.itemId
@@ -66,7 +66,7 @@ export function ConversationList({
 						listing,
 					};
 				})
-			) as Conversation[];
+			)) as Conversation[];
 			setConversations(convos);
 		});
 
@@ -95,10 +95,12 @@ export function ConversationList({
 							const updatedDate = convo.updatedAt.toDate();
 							const now = new Date();
 							const isToday =
-								updatedDate.toDateString() === now.toDateString();
+								updatedDate.toDateString() ===
+								now.toDateString();
 							const isYesterday =
-								new Date(now.setDate(now.getDate() - 1)).toDateString() ===
-								updatedDate.toDateString();
+								new Date(
+									now.setDate(now.getDate() - 1)
+								).toDateString() === updatedDate.toDateString();
 
 							if (isToday) {
 								return updatedDate.toLocaleTimeString([], {

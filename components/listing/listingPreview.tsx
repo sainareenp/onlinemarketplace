@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardTitle } from "../ui/card";
 import { AspectRatio } from "../ui/aspect-ratio";
-import { Listing, updateFavorited } from "@/lib/listingFunctions"; // Adjust the import path as needed
+import { Listing, updateCart, updateFavorited } from "@/lib/listingFunctions"; // Adjust the import path as needed
 import ListingPopup from "./listingPopup";
 
 const ListingPreview: React.FC<{
@@ -24,6 +24,10 @@ const ListingPreview: React.FC<{
 	const handleFavoritedToggle = () => {
 		setIsFavorited((prev) => !prev);
 		updateFavorited(listing.id, userId);
+	};
+
+	const handleAddToCart = () => {
+		updateCart(listing.id, userId);
 	};
 
 	return (
@@ -54,6 +58,7 @@ const ListingPreview: React.FC<{
 				isFavorited={isFavorited}
 				handleFavoritedToggle={handleFavoritedToggle}
 				handleMessageSeller={() => {}}
+				handleAddToCart={handleAddToCart}
 			/>
 		</>
 	);

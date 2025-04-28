@@ -27,6 +27,7 @@ interface ListingPopupProps {
 	isFavorited: boolean;
 	handleFavoritedToggle: () => void;
 	handleMessageSeller: () => void;
+	handleAddToCart: () => void;
 }
 
 const ListingPopup: React.FC<ListingPopupProps> = ({
@@ -36,6 +37,7 @@ const ListingPopup: React.FC<ListingPopupProps> = ({
 	isFavorited,
 	handleFavoritedToggle,
 	handleMessageSeller,
+	handleAddToCart,
 }) => {
 	return (
 		<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -95,6 +97,9 @@ const ListingPopup: React.FC<ListingPopupProps> = ({
 					</Button>
 					<Button onClick={() => alert("Purchase initiated!")}>
 						Buy Now
+					</Button>
+					<Button variant={"secondary"} onClick={handleAddToCart}>
+						Add to Cart
 					</Button>
 					<Button variant={"secondary"} onClick={handleMessageSeller}>
 						<Pencil2Icon className="h-4 w-4" />
