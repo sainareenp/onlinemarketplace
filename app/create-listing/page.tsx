@@ -13,10 +13,7 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { v4 } from "uuid";
 import { useRouter } from "next/navigation";
 import { createNotification } from "@/lib/createnotification";
-import { useEffect } from "react";
-
-
-
+import { MainSidebar } from "@/components/navigation/MainSidebar";
 
 const CreateListingPage = () => {
 	const [formData, setFormData] = useState({
@@ -31,10 +28,6 @@ const CreateListingPage = () => {
 	const router = useRouter();
 
 	const { user } = useAuth();
-	
-	
-	  
-
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -79,8 +72,10 @@ const CreateListingPage = () => {
 			});
 			console.log("Creating listing for user:", user.uid);
 
-			await createNotification(user.uid, `Your listing "${formData.title}" was created!`);
-
+			await createNotification(
+				user.uid,
+				`Your listing "${formData.title}" was created!`
+			);
 		};
 
 		const uploadPhotos = async () => {
@@ -120,165 +115,168 @@ const CreateListingPage = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center min-h-screen bg-background">
-			<Card className="w-full max-w-lg">
-				<CardHeader>
-					<CardTitle className="text-lg font-semibold">
-						Create a New Listing
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<form onSubmit={handleSubmit} className="space-y-4">
-						<div>
-							<Label
-								htmlFor="title"
-								className="text-sm font-medium"
-							>
-								Title
-							</Label>
-							<Input
-								id="title"
-								name="title"
-								placeholder="Enter item title"
-								value={formData.title}
-								onChange={handleChange}
-								className="mt-1"
-							/>
-						</div>
-						<div>
-							<Label
-								htmlFor="description"
-								className="text-sm font-medium"
-							>
-								Description
-							</Label>
-							<Textarea
-								id="description"
-								name="description"
-								placeholder="Enter item description"
-								value={formData.description}
-								onChange={handleChange}
-								className="mt-1"
-							/>
-						</div>
-						<div>
-							<Label
-								htmlFor="price"
-								className="text-sm font-medium"
-							>
-								Price
-							</Label>
-							<Input
-								id="price"
-								name="price"
-								type="number"
-								placeholder="Enter item price"
-								value={formData.price}
-								onChange={handleChange}
-								className="mt-1"
-							/>
-						</div>
-						<div>
-							<Label
-								htmlFor="address"
-								className="text-sm font-medium"
-							>
-								Address
-							</Label>
-							<div className="flex flex-row space-x-2">
-								<Input
-									id="city"
-									name="city"
-									placeholder="City"
-									value={formData.city}
-									onChange={handleChange}
-									className="mt-1"
-								/>
-								<Input
-									id="state"
-									name="state"
-									placeholder="State"
-									value={formData.state}
-									onChange={handleChange}
-									className="mt-1"
-								/>
-							</div>
-						</div>
-						<div>
-							<Label
-								htmlFor="photos"
-								className="text-sm font-medium"
-							>
-								Upload Photos
-							</Label>
-							<div
-								onDrop={(e) => {
-									e.preventDefault();
-									if (e.dataTransfer.files) {
-										const imageFiles = Array.from(
-											e.dataTransfer.files
-										).filter((file) =>
-											file.type.startsWith("image/")
-										);
-										setFormData((prev) => ({
-											...prev,
-											photos: [
-												...prev.photos,
-												...imageFiles,
-											].slice(0, 5),
-										}));
-									}
-								}}
-								onDragOver={(e) => e.preventDefault()}
-								className="border-2 border-dashed border-muted p-4 rounded-md text-center"
-							>
-								<p className="text-sm text-muted-foreground">
-									Drag and drop photos here<br></br>or
-								</p>
-								<Button
-									type="button"
-									onClick={() =>
-										document
-											.getElementById("photos")
-											?.click()
-									}
-									className="mt-2"
+		<>
+			<MainSidebar />
+			<div className=" w-full flex justify-center items-center min-h-screen bg-background">
+				<Card className="w-full max-w-lg">
+					<CardHeader>
+						<CardTitle className="text-lg font-semibold">
+							Create a New Listing
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<form onSubmit={handleSubmit} className="space-y-4">
+							<div>
+								<Label
+									htmlFor="title"
+									className="text-sm font-medium"
 								>
-									Click to Upload
-								</Button>
+									Title
+								</Label>
 								<Input
-									id="photos"
-									name="photos"
-									type="file"
-									accept="image/*"
-									multiple
-									onChange={handlePhotoChange}
-									className="hidden"
+									id="title"
+									name="title"
+									placeholder="Enter item title"
+									value={formData.title}
+									onChange={handleChange}
+									className="mt-1"
 								/>
 							</div>
-						</div>
-						<div className="flex space-x-2 mt-4">
-							{formData.photos.length > 0 && (
-								<PhotoPreviews
-									photos={formData.photos}
-									onRemove={(index) =>
-										setFormData((prev) => ({
-											...prev,
-											photos: prev.photos.filter(
-												(_, i) => i !== index
-											),
-										}))
-									}
+							<div>
+								<Label
+									htmlFor="description"
+									className="text-sm font-medium"
+								>
+									Description
+								</Label>
+								<Textarea
+									id="description"
+									name="description"
+									placeholder="Enter item description"
+									value={formData.description}
+									onChange={handleChange}
+									className="mt-1"
 								/>
-							)}
-						</div>
-						<Button type="submit" className="w-full">
-							Submit Listing
-						</Button>
-					</form>
-				</CardContent>
-			</Card>
-		</div>
+							</div>
+							<div>
+								<Label
+									htmlFor="price"
+									className="text-sm font-medium"
+								>
+									Price
+								</Label>
+								<Input
+									id="price"
+									name="price"
+									type="number"
+									placeholder="Enter item price"
+									value={formData.price}
+									onChange={handleChange}
+									className="mt-1"
+								/>
+							</div>
+							<div>
+								<Label
+									htmlFor="address"
+									className="text-sm font-medium"
+								>
+									Address
+								</Label>
+								<div className="flex flex-row space-x-2">
+									<Input
+										id="city"
+										name="city"
+										placeholder="City"
+										value={formData.city}
+										onChange={handleChange}
+										className="mt-1"
+									/>
+									<Input
+										id="state"
+										name="state"
+										placeholder="State"
+										value={formData.state}
+										onChange={handleChange}
+										className="mt-1"
+									/>
+								</div>
+							</div>
+							<div>
+								<Label
+									htmlFor="photos"
+									className="text-sm font-medium"
+								>
+									Upload Photos
+								</Label>
+								<div
+									onDrop={(e) => {
+										e.preventDefault();
+										if (e.dataTransfer.files) {
+											const imageFiles = Array.from(
+												e.dataTransfer.files
+											).filter((file) =>
+												file.type.startsWith("image/")
+											);
+											setFormData((prev) => ({
+												...prev,
+												photos: [
+													...prev.photos,
+													...imageFiles,
+												].slice(0, 5),
+											}));
+										}
+									}}
+									onDragOver={(e) => e.preventDefault()}
+									className="border-2 border-dashed border-muted p-4 rounded-md text-center"
+								>
+									<p className="text-sm text-muted-foreground">
+										Drag and drop photos here<br></br>or
+									</p>
+									<Button
+										type="button"
+										onClick={() =>
+											document
+												.getElementById("photos")
+												?.click()
+										}
+										className="mt-2"
+									>
+										Click to Upload
+									</Button>
+									<Input
+										id="photos"
+										name="photos"
+										type="file"
+										accept="image/*"
+										multiple
+										onChange={handlePhotoChange}
+										className="hidden"
+									/>
+								</div>
+							</div>
+							<div className="flex space-x-2 mt-4">
+								{formData.photos.length > 0 && (
+									<PhotoPreviews
+										photos={formData.photos}
+										onRemove={(index) =>
+											setFormData((prev) => ({
+												...prev,
+												photos: prev.photos.filter(
+													(_, i) => i !== index
+												),
+											}))
+										}
+									/>
+								)}
+							</div>
+							<Button type="submit" className="w-full">
+								Submit Listing
+							</Button>
+						</form>
+					</CardContent>
+				</Card>
+			</div>
+		</>
 	);
 };
 

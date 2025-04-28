@@ -31,7 +31,7 @@ const TotpSignIn: React.FC<TotpSignInProps> = ({ resolver }) => {
 		try {
 			if (resolver) {
 				await signInWithTOTP(resolver, selectedFactor, code); // Assuming 0 is the index for TOTP
-				router.replace("/explore"); // Redirect after TOTP verification
+				router.replace("/dashboard"); // Redirect after TOTP verification
 			} else {
 				setError("No multi-factor resolver found.");
 			}
