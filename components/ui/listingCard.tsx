@@ -15,7 +15,9 @@ import {
 	CarouselPrevious,
 	CarouselNext,
 } from "./carousel";
-import { updateFavorited } from "@/lib/listingFunctions";
+import { updateFavorited, updateCart } from "@/lib/listingFunctions";
+
+import { getOrCreateConversation } from "@/lib/conversationFunctions";
 
 const ListingCard: React.FC<{
 	listing: Listing;
@@ -38,13 +40,26 @@ const ListingCard: React.FC<{
 		updateFavorited(listing.id, userId);
 	};
 
-	const handleMessageSeller = () => {
-		router.push(`/chat?seller=${listing.userId}&item=${listing.id}`);
+	const handleAddToCart = () => {
+		updateCart(listing.id, userId);
+		alert("Item added to cart!");
+	};
+
+	const handleMessageSeller = async () => {
+		const conversationId = await getOrCreateConversation(
+			userId,
+			listing.userId,
+			listing.id
+		);
+		router.push(`/chat?conversationId=${conversationId}`);
 	};
 
 	return (
 		<>
-			<Card className="w-full cursor-pointer" onClick={() => setShowModal(true)}>
+			<Card
+				className="w-full cursor-pointer"
+				onClick={() => setShowModal(true)}
+			>
 				<div className="flex flex-col">
 					<div className="px-9">
 						<Carousel className="w-full max-w-md mx-auto">
@@ -57,7 +72,11 @@ const ListingCard: React.FC<{
 													<AspectRatio ratio={4 / 4}>
 														<img
 															src={photo}
-															alt={`${listing.title} photo ${index + 1}`}
+															alt={`${
+																listing.title
+															} photo ${
+																index + 1
+															}`}
 															className="rounded-md object-cover w-full h-full"
 														/>
 													</AspectRatio>
@@ -77,7 +96,9 @@ const ListingCard: React.FC<{
 					</div>
 					<div className="p-4">
 						<CardHeader>
-							<CardTitle className="text-lg">{listing.title}</CardTitle>
+							<CardTitle className="text-lg">
+								{listing.title}
+							</CardTitle>
 							<p className="text-sm text-muted-foreground">
 								{listing.description.slice(0, 40)}
 								{listing.description.length > 40 && "..."}
@@ -111,7 +132,11 @@ const ListingCard: React.FC<{
 													<AspectRatio ratio={4 / 4}>
 														<img
 															src={photo}
-															alt={`${listing.title} photo ${index + 1}`}
+															alt={`${
+																listing.title
+															} photo ${
+																index + 1
+															}`}
 															className="rounded-md object-cover w-full h-full"
 														/>
 													</AspectRatio>
@@ -151,10 +176,13 @@ const ListingCard: React.FC<{
 								<StarIcon className="h-4 w-4" />
 							)}
 						</Button>
-						<Button onClick={() => alert("Purchase initiated!")}>
+						<Button onClick={handleAddToCart}>
 							Buy Now
 						</Button>
-						<Button variant={"secondary"} onClick={handleMessageSeller}>
+						<Button
+							variant={"secondary"}
+							onClick={handleMessageSeller}
+						>
 							<Pencil2Icon className="h-4 w-4" />
 							Message Seller
 						</Button>

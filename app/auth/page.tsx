@@ -39,7 +39,7 @@ export default function Register() {
 
 		try {
 			await signUp(email, password, name, address, birthday);
-			router.replace("/dashboard"); // Redirect after registration
+			router.replace("/explore"); // Redirect after registration
 			alert("Registration successful! You can now log in.");
 		} catch (err: unknown) {
 			if (err instanceof Error) {
@@ -55,7 +55,7 @@ export default function Register() {
 		try {
 			await loginWithProvider(Provider);
 			await refreshUser;
-			router.replace("/dashboard"); // Redirect after Google sign-in
+			router.replace("/explore"); // Redirect after Google sign-in
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				handleTOTPSignIn(err);
@@ -101,7 +101,7 @@ export default function Register() {
 
 		try {
 			await signIn(email, password);
-			router.replace("/dashboard"); // Redirect after login
+			router.replace("/explore"); // Redirect after login
 			alert("Login successful!");
 		} catch (err: unknown) {
 			if (err instanceof Error) {

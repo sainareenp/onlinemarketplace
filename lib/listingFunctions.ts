@@ -159,3 +159,57 @@ export async function updateFavorited(listingId: string, userId: string) {
 		throw error;
 	}
 }
+
+export async function updateCart(listingId: string, userId: string) {
+	if (!listingId || !userId) {
+		throw new Error("Listing ID and User ID are required.");
+	}
+
+	try {
+		const userCartListingsRef = collection(db, "users", userId, "cart");
+		const cartListingSnapshots = await getDocs(userCartListingsRef);
+
+		const listingIds = cartListingSnapshots.docs.map((doc) => doc.id);
+		if (listingIds.includes(listingId)) {
+			// If the listing is already in cart, remove it
+			const listingDocRef = doc(userCartListingsRef, listingId);
+			await deleteDoc(listingDocRef);
+		} else {
+			// If the listing is not in cart, add it
+			const listingDocRef = doc(userCartListingsRef, listingId);
+			await setDoc(listingDocRef, { listingId }, { merge: true });
+		}
+	} catch (error) {
+		console.error("Error updating cart:", error);
+		throw error;
+	}
+	
+}
+
+export async function getUserCart(userId: string): Promise<Listing[]> {
+	if (!userId) {
+		throw new Error("User ID is required.");
+	}
+
+	const userCartRef = collection(db, "users", userId, "cart");
+	const cartListingSnapshots = await getDocs(userCartRef);
+
+	const listingIds = cartListingSnapshots.docs.map((doc) => doc.id);
+
+	try {
+		const listings: Listing[] = await Promise.all(
+			listingIds.map(async (listingId) => {
+				console.log("Cart Listing ID:", listingId);
+				const listing = await getListingById(listingId);
+				if (listing) {
+					return listing;
+				}
+				throw new Error(`Cart listing with ID ${listingId} not found.`);
+			})
+		);
+		return listings;
+	} catch (error) {
+		console.error("Error fetching user cart listings:", error);
+		throw error;
+	}
+}
