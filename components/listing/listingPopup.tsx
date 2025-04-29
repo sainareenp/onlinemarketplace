@@ -12,6 +12,7 @@ import {
 	CarouselPrevious,
 	CarouselNext,
 } from "../ui/carousel";
+import { useRouter } from "next/navigation";
 
 interface ListingPopupProps {
 	showModal: boolean;
@@ -39,6 +40,7 @@ const ListingPopup: React.FC<ListingPopupProps> = ({
 	handleMessageSeller,
 	handleAddToCart,
 }) => {
+	const router = useRouter();
 	return (
 		<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
 			<div className="p-6">
@@ -95,7 +97,7 @@ const ListingPopup: React.FC<ListingPopupProps> = ({
 							<StarIcon className="h-4 w-4" />
 						)}
 					</Button>
-					<Button onClick={() => alert("Purchase initiated!")}>
+					<Button onClick={() =>{ handleAddToCart(); router.push("/cart")}}>
 						Buy Now
 					</Button>
 					<Button variant={"secondary"} onClick={handleAddToCart}>
