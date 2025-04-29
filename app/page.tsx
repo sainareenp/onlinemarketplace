@@ -1,6 +1,7 @@
 import { MainSidebar } from "@/components/navigation/MainSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import HomeImages from "@/components/ui/Homepage";
 
 export default function Home() {
 	return (
@@ -16,7 +17,9 @@ export default function Home() {
 						</p>
 					</div>
 				</header>
-
+				<main className="container mx-auto py-8 px-4">
+        			<HomeImages />
+					</main>
 				<main className="container mx-auto py-8 px-4">
 					<section className="mb-8">
 						<Card>
