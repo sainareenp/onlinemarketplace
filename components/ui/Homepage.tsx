@@ -8,7 +8,7 @@ export default function HomeImages() {
 						<img
 							src="https://m.media-amazon.com/images/I/51fM0CKG+HL.jpg"
 							alt="Playstation"
-							className="w-full h-auto object-cover"
+							className="w-full h-64 object-cover" // Set fixed height here
 						/>
 						<p className="text-center mt-2 font-semibold">Playstation</p>
 					</div>
@@ -17,7 +17,7 @@ export default function HomeImages() {
 						<img
 							src="https://www.techadvisor.com/wp-content/uploads/2025/04/best-phones-2025.jpg?quality=50&strip=all"
 							alt="Mobiles"
-							className="w-full h-auto object-cover"
+							className="w-full h-64 object-cover" // Set fixed height here
 						/>
 						<p className="text-center mt-2 font-semibold">Mobiles</p>
 					</div>
@@ -26,7 +26,7 @@ export default function HomeImages() {
 						<img
 							src="https://images.thdstatic.com/productImages/67065f7b-9422-4417-aa6b-b97ae2aa8da8/svn/sand-beige-fabric-stylewell-sofas-couches-113a003snd-64_600.jpg"
 							alt="Sofa and Couches"
-							className="w-full h-auto object-cover"
+							className="w-full h-64 object-cover" // Set fixed height here
 						/>
 						<p className="text-center mt-2 font-semibold">Sofa and Couches</p>
 					</div>
