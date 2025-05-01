@@ -274,20 +274,13 @@ export function ChatWindow({
       })) as Message[];
       setMessages(msgs);
 
-      const unread = snapshot.docs.filter(
-        (d) => d.data().senderId !== user.uid && !d.data().read
-      );
-
-      for (const docSnap of unread) {
-        await updateDoc(
-          doc(db, "conversations", activeConversation.id, "messages", docSnap.id),
-          { read: true }
-        );
-      }
-
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      for (const msg of msgs) {
+		if (msg.senderId !== user?.uid && !msg.read) {
+		  await updateDoc(doc(db, "conversations", activeConversation.id, "messages", msg.id), {
+			read: true,
+		  });
+		}
+	  }
     });
 
     return () => unsubscribe();
@@ -352,7 +345,7 @@ export function ChatWindow({
   }
 
   return (
-    <div className="flex flex-col justify-center items-center flex-1 p-4 h-full">
+    <div className="flex flex-col justify-center items-center flex-1 p-4 h-full min-h-lg">
       {activeConversation.listing && (
         <div className="w-full max-w-2xl mx-auto pb-4">
           <ListingPreview
@@ -363,14 +356,14 @@ export function ChatWindow({
         </div>
       )}
 
-      <div className="w-full max-w-2xl border rounded-lg shadow-lg flex flex-col overflow-hidden h-full bg-white dark:bg-black">
+      <div className="w-full h-[30vh] max-w-2xl border rounded-lg shadow-lg flex flex-col overflow-hidden bg-white dark:bg-black">
         <div className="border-b px-4 py-2 bg-gray-50 dark:bg-gray-900 text-sm font-semibold flex justify-between items-center">
           <span className="text-primary">Chat with: {participantNames}</span>
           <PresenceIndicator userId={otherUserId} />
         </div>
 
         <ScrollArea className="flex-1 overflow-y-auto max-h-[70vh] bg-gray-100 dark:bg-gray-800">
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-3 min-h-lg">
             {messages.map((msg) => (
               <div
                 key={msg.id}

@@ -163,7 +163,6 @@ const CartDisplayListings: React.FC = () => {
 				{listings.length > 0 ? (
 					listings.map((listing) => (
 						<div key={listing.id} className="listing-item w-1/4 p-2">
-						console.log("Rendering cart item:", listing.title);
 							<ListingCard
 								listing={listing}
 								favorited={false}
