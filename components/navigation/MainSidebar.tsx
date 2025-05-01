@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Home,ShoppingCart, MessageCircle, Compass, MenuIcon, Star } from "lucide-react";
+import { Home, ShoppingCart, MessageCircle, Compass, MenuIcon, Star } from "lucide-react";
 import {
 	Sidebar,
 	SidebarHeader,
@@ -27,6 +26,7 @@ export function MainSidebar() {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
+
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
 							<a href="/dashboard">
@@ -35,6 +35,7 @@ export function MainSidebar() {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
+
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
 							<a href="/explore">
@@ -43,7 +44,7 @@ export function MainSidebar() {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
-					
+
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
 							<a href="/favorites">
@@ -52,7 +53,7 @@ export function MainSidebar() {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
-					
+
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
 							<a href="/cart">
@@ -62,7 +63,6 @@ export function MainSidebar() {
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 
-					
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
 							<a href="/chat">
@@ -73,8 +73,8 @@ export function MainSidebar() {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<SidebarContent />
+
+			
 		</Sidebar>
 	);
 }
-
